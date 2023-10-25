@@ -41,8 +41,8 @@ uint8_t pop(stack *s)
 
 	if (isempty(s))
 	{
-		// error overflow
-		perror("overflow");
+		// error underflow
+		perror("underflow");
 	}
 	else
 	{
