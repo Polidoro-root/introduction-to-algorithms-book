@@ -1,21 +1,9 @@
+#include "max_heap.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define SIZE 10
-
-typedef struct Heap {
-  int *array;
-  int heapsize;
-} Heap;
-
-int parent(int i);
-int left(int i);
-int right(int i);
-
-void maxheapify(Heap *, int);   // O(lg n)
-void buildmaxheap(Heap *, int); // O(n)
-void heapsort(Heap *, int);     // O(n lg n)
 
 int main() {
   Heap *heap = malloc(sizeof(Heap));
@@ -92,4 +80,52 @@ void heapsort(Heap *A, int n) {
     A->heapsize--;
     maxheapify(A, 0);
   }
+}
+
+int maxheapmaximum(Heap *A) {
+  if (A->heapsize < 1) {
+    perror("heap overflow\n");
+  }
+  return A->array[0];
+}
+
+int maxheapextractmax(Heap *A) {
+  int max = maxheapmaximum(A);
+
+  A->array[0] = A->array[A->heapsize--];
+  maxheapify(A, 0);
+
+  return max;
+}
+
+void maxheapincreasekey(Heap *A, int x, int k) {
+  if (k < x) {
+    perror("new key is smaller than current key\n");
+  }
+
+  x = k;
+
+  int i = 0;
+
+  // find the index i in array A where object x occurs
+  while (i > 1 && parent(i) < i) {
+    int tmp = A->array[i];
+    A->array[i] = A->array[parent(i)];
+    A->array[parent(i)] = tmp;
+    i = parent(i);
+  }
+}
+
+void maxheapinsert(Heap *A, int x, int n) {
+  if (A->heapsize == n) {
+    perror("heap overflow\n");
+  }
+
+  A->heapsize++;
+  int k = x;
+  x = -INFINITY;
+  A->array[A->heapsize] = x;
+
+  // map x to index heapsize in the array
+  maxheapincreasekey(A, x, k);
 }
